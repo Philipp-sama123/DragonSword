@@ -64,37 +64,39 @@ public class LocomotionManager : MonoBehaviour
 
     private void HandleMovement()
     {
-        _isCrouching = _animatorManager.animator.GetBool(IsCrouching);
-        // prevents movement while jumping
-        // Todo: maybe remove (!)
-
         if (isJumping)
         {
             return;
         }
+        
+        _isCrouching = _animatorManager.animator.GetBool(IsCrouching);
 
-        // ToDo: think of the Movement! depending on camera or not
         _moveDirection = _cameraObject.forward * _inputManager.verticalInput;
         _moveDirection += _cameraObject.right * _inputManager.horizontalInput;
 
-        // _moveDirection = _cameraObject.forward * _inputManager.verticalInput;
-        // _moveDirection *= _inputManager.horizontalInput;
-
-        _animatorManager.UpdateAnimatorValues(
-            _inputManager.horizontalInput,
-            _inputManager.verticalInput,
-            isSprinting);
         _moveDirection.Normalize();
         _moveDirection.y = 0; // prevent going up
 
+        
+        _animatorManager.UpdateAnimatorValues(
+            _moveDirection.x,
+            _moveDirection.z,
+            isSprinting);
+        
+        AdjustMovementSpeed();
+        
+        playerRigidbody.velocity = _moveDirection;
+    }
 
+    private void AdjustMovementSpeed()
+    {
         if (isSprinting)
         {
             _moveDirection *= sprintingSpeed;
         }
         else
         {
-            if (_inputManager.moveAmount >= 0.5f)
+            if (_inputManager.verticalInput >= 0.5f)
             {
                 _moveDirection *= runningSpeed;
             }
@@ -108,8 +110,6 @@ public class LocomotionManager : MonoBehaviour
         {
             _moveDirection /= crouchingSpeedReducer;
         }
-
-        playerRigidbody.velocity = _moveDirection;
     }
 
     private void HandleFallingAndLanding()
@@ -137,7 +137,6 @@ public class LocomotionManager : MonoBehaviour
             //  * inAirTimer    --      the longer you are in the air the quicker you fall
         }
 
-        Debug.Log("Physics--" + Physics.SphereCast(raycastOrigin, 0.2f, -Vector3.up, out hit, groundLayer));
         if (Physics.SphereCast(raycastOrigin, 0.2f, -Vector3.up, out hit, groundLayer))
         {
             if (!isGrounded && !_playerManager.isInteracting)
@@ -161,7 +160,7 @@ public class LocomotionManager : MonoBehaviour
         // this is responsible for setting the feet over the ground when the player is grounded
         if (isGrounded && !isJumping)
         {
-            if (_playerManager.isInteracting || _inputManager.moveAmount > 0)
+            if (_playerManager.isInteracting /*|| _inputManager.moveAmount > 0*/)
             {
                 transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 0.1f);
             }

@@ -16,15 +16,14 @@ public class InputManager : MonoBehaviour
     public float cameraInputX;
     public float cameraInputY;
 
-    public float moveAmount;
     public float horizontalInput;
     public float verticalInput;
 
-    public bool crouch_input;
-
+    public bool crouchInput;
     public bool sprintInput;
+    public bool jumpInput;
+
     public bool x_Input;
-    public bool jump_input;
 
     public bool right_trigger_input;
     public bool left_trigger_input;
@@ -60,8 +59,8 @@ public class InputManager : MonoBehaviour
             _playerInput.PlayerActions.X.performed += i => x_Input = true; // set true when pressed 
             _playerInput.PlayerActions.X.canceled += i => x_Input = false;
 
-            _playerInput.PlayerActions.Jump.performed += i => jump_input = true; // set true when pressed 
-            _playerInput.PlayerActions.Jump.canceled += i => jump_input = false;
+            _playerInput.PlayerActions.Jump.performed += i => jumpInput = true; // set true when pressed 
+            _playerInput.PlayerActions.Jump.canceled += i => jumpInput = false;
 
             _playerInput.PlayerActions.RT.performed += i => right_trigger_input = true;
             _playerInput.PlayerActions.RT.canceled += i => right_trigger_input = false;
@@ -72,8 +71,8 @@ public class InputManager : MonoBehaviour
             _playerInput.PlayerActions.LB_Hold.performed += i => left_button_hold_input = true;
             _playerInput.PlayerActions.LB_Hold.canceled += i => left_button_hold_input = false;
 
-            _playerInput.PlayerMovement.ToggleCrouching.performed += i => crouch_input = true;
-            _playerInput.PlayerMovement.ToggleCrouching.canceled += i => crouch_input = false;
+            _playerInput.PlayerMovement.ToggleCrouching.performed += i => crouchInput = true;
+            _playerInput.PlayerMovement.ToggleCrouching.canceled += i => crouchInput = false;
 
             _playerInput.PlayerActions.LT.performed += _ => HandleAimingInput(true);
             _playerInput.PlayerActions.LT.canceled += _ => HandleAimingInput(false);
@@ -111,33 +110,18 @@ public class InputManager : MonoBehaviour
 
         cameraInputX = cameraInput.x; // take input from joystick and then pass it to move the camera 
         cameraInputY = cameraInput.y;
-
-        moveAmount =
-            Mathf.Clamp01(Mathf.Abs(horizontalInput) +
-                          Mathf.Abs(verticalInput)); // clamp value between 0 and 1 // Abs - Absolute Value
-
-        //ToDo: set animator values for rotation
-        //ToDo: think on when to use moveAmount
-     
     }
 
     private void HandleSprintingInput()
     {
-        if (sprintInput == true && moveAmount > 0.5f)
-        {
-            _locomotionManager.isSprinting = true;
-        }
-        else
-        {
-            _locomotionManager.isSprinting = false;
-        }
+        _locomotionManager.isSprinting = sprintInput;
     }
 
     private void HandleJumpingInput()
     {
-        if (jump_input)
+        if (jumpInput)
         {
-            jump_input = false;
+            jumpInput = false;
             _locomotionManager.HandleJumping();
         }
     }
@@ -168,7 +152,7 @@ public class InputManager : MonoBehaviour
 
     private void HandleCrouchInput()
     {
-        _locomotionManager.HandleCrouchInput(crouch_input);
+        _locomotionManager.HandleCrouchInput(crouchInput);
     }
 
     private void HandleAimingInput(bool isAiming)
