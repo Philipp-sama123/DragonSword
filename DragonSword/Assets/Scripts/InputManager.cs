@@ -22,7 +22,7 @@ public class InputManager : MonoBehaviour
 
     public bool crouch_input;
 
-    public bool b_Input;
+    public bool sprintInput;
     public bool x_Input;
     public bool jump_input;
 
@@ -54,8 +54,8 @@ public class InputManager : MonoBehaviour
                 i => cameraInput =
                     i.ReadValue<Vector2>(); // if you move the mouse or the right joystick it will then send it to the camera input // more explain needed
 
-            _playerInput.PlayerActions.B.performed += i => b_Input = true; // b hit --> when holding it 
-            _playerInput.PlayerActions.B.canceled += i => b_Input = false;
+            _playerInput.PlayerActions.B.performed += i => sprintInput = true; // b hit --> when holding it 
+            _playerInput.PlayerActions.B.canceled += i => sprintInput = false;
 
             _playerInput.PlayerActions.X.performed += i => x_Input = true; // set true when pressed 
             _playerInput.PlayerActions.X.canceled += i => x_Input = false;
@@ -117,12 +117,16 @@ public class InputManager : MonoBehaviour
                           Mathf.Abs(verticalInput)); // clamp value between 0 and 1 // Abs - Absolute Value
 
         //ToDo: set animator values for rotation
-        _animatorManager.UpdateAnimatorValues(horizontalInput, moveAmount, _locomotionManager.isSprinting);
+        //ToDo: think on when to use moveAmount
+        _animatorManager.UpdateAnimatorValues(
+            horizontalInput,
+            (sprintInput ? verticalInput * 2 : verticalInput),
+            _locomotionManager.isSprinting);
     }
 
     private void HandleSprintingInput()
     {
-        if (b_Input == true && moveAmount > 0.5f)
+        if (sprintInput == true && moveAmount > 0.5f)
         {
             _locomotionManager.isSprinting = true;
         }

@@ -89,7 +89,7 @@ public class AnimatorManager : MonoBehaviour
         if (isSprinting)
         {
            // snappedHorizontal = horivontalMovement;
-            snappedVertical = 2;
+           snappedVertical *= 2;
         }
         animator.SetFloat(_vertical, snappedVertical, .1f, Time.deltaTime);
         animator.SetFloat(_horizontal, snappedHorizontal, .1f, Time.deltaTime);

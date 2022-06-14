@@ -70,9 +70,13 @@ public class LocomotionManager : MonoBehaviour
         {
             return;
         }
-
+        // ToDo: think of the Movement! depending on camera or not
+        
         _moveDirection = _cameraObject.forward * _inputManager.verticalInput;
-        _moveDirection = _moveDirection + _cameraObject.right * _inputManager.horizontalInput;
+        _moveDirection += _cameraObject.right * _inputManager.horizontalInput;
+        
+        // _moveDirection = _cameraObject.forward * _inputManager.verticalInput;
+        // _moveDirection *= _inputManager.horizontalInput;
         _moveDirection.Normalize();
         _moveDirection.y = 0; // prevent going up
 
