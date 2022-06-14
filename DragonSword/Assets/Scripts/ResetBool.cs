@@ -18,6 +18,10 @@ public class ResetBool : StateMachineBehaviour
             animator.SetBool(isInteractingBool, isInteractingStatus);
         if (isUsingRootMotionBool.Length > 0)
             animator.SetBool(isUsingRootMotionBool, isUsingRootMotionStatus);
+    }
+
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
         if (isJumpingBool.Length > 0)
             animator.SetBool(isJumpingBool, isJumpingBoolStatus);
     }

@@ -118,10 +118,7 @@ public class InputManager : MonoBehaviour
 
         //ToDo: set animator values for rotation
         //ToDo: think on when to use moveAmount
-        _animatorManager.UpdateAnimatorValues(
-            horizontalInput,
-            (sprintInput ? verticalInput * 2 : verticalInput),
-            _locomotionManager.isSprinting);
+     
     }
 
     private void HandleSprintingInput()

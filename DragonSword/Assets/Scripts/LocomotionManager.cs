@@ -12,7 +12,7 @@ public class LocomotionManager : MonoBehaviour
     private InputManager _inputManager;
     private Transform _cameraObject;
 
-    Vector3 _moveDirection;
+    Vector3 _moveDirection = Vector3.zero;
 
     [Header("Falling")] public float inAirTimer;
     public float leapingVelocity;
@@ -23,6 +23,7 @@ public class LocomotionManager : MonoBehaviour
     [Header("Movement Flags")] public bool isSprinting;
 
     public bool isJumping;
+
     public bool isGrounded;
     // ToDo: think about it: Brackeys isGroundedCheck: isGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundMask); 
 
@@ -66,17 +67,23 @@ public class LocomotionManager : MonoBehaviour
         _isCrouching = _animatorManager.animator.GetBool(IsCrouching);
         // prevents movement while jumping
         // Todo: maybe remove (!)
+
         if (isJumping)
         {
             return;
         }
+
         // ToDo: think of the Movement! depending on camera or not
-        
         _moveDirection = _cameraObject.forward * _inputManager.verticalInput;
         _moveDirection += _cameraObject.right * _inputManager.horizontalInput;
-        
+
         // _moveDirection = _cameraObject.forward * _inputManager.verticalInput;
         // _moveDirection *= _inputManager.horizontalInput;
+
+        _animatorManager.UpdateAnimatorValues(
+            _inputManager.horizontalInput,
+            _inputManager.verticalInput,
+            isSprinting);
         _moveDirection.Normalize();
         _moveDirection.y = 0; // prevent going up
 
@@ -102,8 +109,7 @@ public class LocomotionManager : MonoBehaviour
             _moveDirection /= crouchingSpeedReducer;
         }
 
-        Vector3 movementVelocity = _moveDirection;
-        playerRigidbody.velocity = movementVelocity;
+        playerRigidbody.velocity = _moveDirection;
     }
 
     private void HandleFallingAndLanding()
@@ -130,7 +136,8 @@ public class LocomotionManager : MonoBehaviour
             //  -Vector3.up     --      means it pulls you downwards 
             //  * inAirTimer    --      the longer you are in the air the quicker you fall
         }
-Debug.Log("Physics--" +Physics.SphereCast(raycastOrigin, 0.2f, -Vector3.up, out hit, groundLayer ));
+
+        Debug.Log("Physics--" + Physics.SphereCast(raycastOrigin, 0.2f, -Vector3.up, out hit, groundLayer));
         if (Physics.SphereCast(raycastOrigin, 0.2f, -Vector3.up, out hit, groundLayer))
         {
             if (!isGrounded && !_playerManager.isInteracting)
