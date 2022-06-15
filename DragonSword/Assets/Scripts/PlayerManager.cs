@@ -38,7 +38,7 @@ public class PlayerManager : MonoBehaviour
     private void FixedUpdate()
     {
         _locomotionManager.HandleAllMovements();
-        // playerAim.HandleRotation(); ;
+        // _locomotionManager.HandleRotation(); ;
     }
 
     //afer Frame ended

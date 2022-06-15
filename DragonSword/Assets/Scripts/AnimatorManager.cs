@@ -31,7 +31,7 @@ public class AnimatorManager : MonoBehaviour
         animator.SetBool(IsUsingRootMotion, useRootMotion);
         animator.CrossFade(targetAnimation, 0.2f);
     }
-    public void UpdateAnimatorValues(float horivontalMovement, float verticalMovement, bool isSprinting)
+    public void UpdateAnimatorMovementValues(float horivontalMovement, float verticalMovement, bool isSprinting)
     {
        
         //ToDo: Animation Snapping 

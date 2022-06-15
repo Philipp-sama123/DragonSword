@@ -1,14 +1,12 @@
+using DefaultNamespace;
 using UnityEngine;
 
+[RequireComponent(typeof(LocomotionManager), typeof(CombatManager))]
 public class InputManager : MonoBehaviour
 {
     private PlayerInput _playerInput;
-
     private LocomotionManager _locomotionManager; // ToDo: Think of Required Field 
-
-    private AnimatorManager _animatorManager; // ToDo: Think of Required Field 
-    // PlayerCombatManager playerCombatManager; // ToDo: Think of Required Field 
-    // SwitchVirtualCamera switchVirtual;
+    CombatManager _combatManager; // ToDo: Think of Required Field 
 
     public Vector2 movementInput;
     public Vector2 cameraInput;
@@ -20,10 +18,11 @@ public class InputManager : MonoBehaviour
     public float verticalInput;
 
     public bool crouchInput;
+    public bool dodgeInput;
     public bool sprintInput;
     public bool jumpInput;
 
-    public bool x_Input;
+    public bool primaryAttackInput;
 
     public bool right_trigger_input;
     public bool left_trigger_input;
@@ -34,7 +33,7 @@ public class InputManager : MonoBehaviour
     private void Awake()
     {
         _locomotionManager = GetComponent<LocomotionManager>();
-        _animatorManager = GetComponent<AnimatorManager>();
+        _combatManager = GetComponent<CombatManager>();
 
         // playerCombatManager = GetComponent<PlayerCombatManager>();
         // switchVirtual = FindObjectOfType<SwitchVirtualCamera>();
@@ -53,17 +52,22 @@ public class InputManager : MonoBehaviour
                 i => cameraInput =
                     i.ReadValue<Vector2>(); // if you move the mouse or the right joystick it will then send it to the camera input // more explain needed
 
-            _playerInput.PlayerActions.B.performed += i => sprintInput = true; // b hit --> when holding it 
-            _playerInput.PlayerActions.B.canceled += i => sprintInput = false;
+            _playerInput.PlayerMovement.Dodge.performed += i => dodgeInput = true;
+            _playerInput.PlayerMovement.Dodge.canceled += i => dodgeInput = false;
 
-            _playerInput.PlayerActions.X.performed += i => x_Input = true; // set true when pressed 
-            _playerInput.PlayerActions.X.canceled += i => x_Input = false;
+            _playerInput.PlayerActions.Sprint.performed += i => sprintInput = true;
+            _playerInput.PlayerActions.Sprint.canceled += i => sprintInput = false;
+
+
+            _playerInput.PlayerActions.PrimaryAttack.performed +=
+                i => primaryAttackInput = true; // set true when pressed 
+            _playerInput.PlayerActions.PrimaryAttack.canceled += i => primaryAttackInput = false;
+
+            _playerInput.PlayerActions.SecondaryAttack.performed += i => right_trigger_input = true;
+            _playerInput.PlayerActions.SecondaryAttack.canceled += i => right_trigger_input = false;
 
             _playerInput.PlayerActions.Jump.performed += i => jumpInput = true; // set true when pressed 
             _playerInput.PlayerActions.Jump.canceled += i => jumpInput = false;
-
-            _playerInput.PlayerActions.RT.performed += i => right_trigger_input = true;
-            _playerInput.PlayerActions.RT.canceled += i => right_trigger_input = false;
 
             _playerInput.PlayerActions.RB_Hold.performed += i => right_button_hold_input = true;
             _playerInput.PlayerActions.RB_Hold.canceled += i => right_button_hold_input = false;
@@ -94,7 +98,7 @@ public class InputManager : MonoBehaviour
         HandleMovementInput();
         HandleSprintingInput();
         HandleJumpingInput();
-        HandleSlideInput();
+        HandleDodgeInput();
 
         HandleAttackInput();
         HandleDefenseInput();
@@ -126,20 +130,20 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private void HandleSlideInput()
+    private void HandleDodgeInput()
     {
-        if (x_Input)
+        if (dodgeInput)
         {
-            _locomotionManager.HandleSlide();
+            _locomotionManager.HandleDodge();
         }
     }
 
     private void HandleAttackInput() // maybe wrap in action input#
     {
-        // if (right_trigger_input || right_button_hold_input)
-        // {
-        //     playerCombatManager.HandleAttack(right_trigger_input, right_button_hold_input);
-        // }
+        if (primaryAttackInput)
+        {
+            _combatManager.HandlePrimaryAttack();
+        }
     }
 
     private void HandleDefenseInput()

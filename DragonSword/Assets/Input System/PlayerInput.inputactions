@@ -31,6 +31,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Dodge",
+                    "type": "Button",
+                    "id": "5eabf911-8e3d-49b2-af0f-3bf269779228",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -231,6 +240,28 @@
                     "action": "ToggleCrouching",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9a01512d-60d2-4d7b-a885-4c8ac0e93dd5",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dodge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "204982d6-1570-4e1f-8eea-aac938b0a00c",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dodge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -239,7 +270,7 @@
             "id": "f549c2bb-61df-494d-aaf6-8d5f01717a1e",
             "actions": [
                 {
-                    "name": "B",
+                    "name": "Sprint",
                     "type": "Button",
                     "id": "f3496578-f0d7-482f-9c12-cb017518857b",
                     "expectedControlType": "Button",
@@ -257,7 +288,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "X",
+                    "name": "PrimaryAttack",
                     "type": "Button",
                     "id": "23cb67ef-784e-4814-850b-efc9abcc2ce1",
                     "expectedControlType": "Button",
@@ -266,7 +297,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "RT",
+                    "name": "SecondaryAttack",
                     "type": "Button",
                     "id": "6c61b1fd-6e2d-477e-8c97-fc6f97896aba",
                     "expectedControlType": "Button",
@@ -306,11 +337,11 @@
                 {
                     "name": "",
                     "id": "1305bc8f-cf46-446f-ac94-44ed30dfeb4b",
-                    "path": "<Gamepad>/buttonEast",
+                    "path": "<Gamepad>/leftStickPress",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "B",
+                    "action": "Sprint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -321,7 +352,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "B",
+                    "action": "Sprint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -354,18 +385,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "X",
+                    "action": "PrimaryAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "43274e3c-fe75-42fd-b036-67aa352b01ba",
-                    "path": "<Keyboard>/x",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "X",
+                    "action": "PrimaryAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -376,7 +407,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "RT",
+                    "action": "SecondaryAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -384,10 +415,10 @@
                     "name": "",
                     "id": "25e2e4e6-65eb-4660-b73a-86b2ce6ddf78",
                     "path": "<Mouse>/leftButton",
-                    "interactions": "",
+                    "interactions": "Hold",
                     "processors": "",
                     "groups": "",
-                    "action": "RT",
+                    "action": "SecondaryAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

@@ -20,6 +20,8 @@ public class ResetBool : StateMachineBehaviour
             animator.SetBool(isUsingRootMotionBool, isUsingRootMotionStatus);
     }
 
+    // Called on the last update frame when a state machine evaluate this state.
+
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         if (isJumpingBool.Length > 0)

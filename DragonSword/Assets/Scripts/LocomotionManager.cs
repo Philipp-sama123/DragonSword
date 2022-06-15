@@ -68,7 +68,7 @@ public class LocomotionManager : MonoBehaviour
         {
             return;
         }
-        
+
         _isCrouching = _animatorManager.animator.GetBool(IsCrouching);
 
         _moveDirection = _cameraObject.forward * _inputManager.verticalInput;
@@ -77,39 +77,15 @@ public class LocomotionManager : MonoBehaviour
         _moveDirection.Normalize();
         _moveDirection.y = 0; // prevent going up
 
-        
-        _animatorManager.UpdateAnimatorValues(
+
+        _animatorManager.UpdateAnimatorMovementValues(
             _moveDirection.x,
             _moveDirection.z,
             isSprinting);
-        
+
         AdjustMovementSpeed();
-        
+
         playerRigidbody.velocity = _moveDirection;
-    }
-
-    private void AdjustMovementSpeed()
-    {
-        if (isSprinting)
-        {
-            _moveDirection *= sprintingSpeed;
-        }
-        else
-        {
-            if (_inputManager.verticalInput >= 0.5f)
-            {
-                _moveDirection *= runningSpeed;
-            }
-            else
-            {
-                _moveDirection *= walkingSpeed;
-            }
-        }
-
-        if (_isCrouching)
-        {
-            _moveDirection /= crouchingSpeedReducer;
-        }
     }
 
     private void HandleFallingAndLanding()
@@ -183,14 +159,14 @@ public class LocomotionManager : MonoBehaviour
         playerRigidbody.velocity = playerVelocity;
     }
 
-    public void HandleSlide()
+    public void HandleDodge()
     {
         if (_playerManager.isInteracting)
         {
             return;
         }
 
-        _animatorManager.PlayTargetAnimation("Slide Under", true, true);
+        _animatorManager.PlayTargetAnimation("Dodge Forward", true, true);
         // toggle invulnerable bool here
     }
 
@@ -198,5 +174,30 @@ public class LocomotionManager : MonoBehaviour
     {
         // todo fix
         _animatorManager.animator.SetBool(IsCrouching, isCrouching);
+    }
+
+
+    private void AdjustMovementSpeed()
+    {
+        if (isSprinting)
+        {
+            _moveDirection *= sprintingSpeed;
+        }
+        else
+        {
+            if (_inputManager.verticalInput >= 0.5f)
+            {
+                _moveDirection *= runningSpeed;
+            }
+            else
+            {
+                _moveDirection *= walkingSpeed;
+            }
+        }
+
+        if (_isCrouching)
+        {
+            _moveDirection /= crouchingSpeedReducer;
+        }
     }
 }
