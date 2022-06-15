@@ -46,6 +46,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""ChangeMovement"",
+                    ""type"": ""Button"",
+                    ""id"": ""649ab46d-0442-4f2c-8e0e-972389ed9fe2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""ToggleCrouching"",
                     ""type"": ""Button"",
                     ""id"": ""66ce8fcb-4351-4e2f-9c62-ae87bb7ac5dc"",
@@ -284,6 +293,28 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""Dodge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2b60a36c-7496-4bc9-871c-bbac7a269a8e"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeMovement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0b3ee37b-7d51-4728-9744-52dcc2cb32d0"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeMovement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -328,15 +359,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""LT"",
-                    ""type"": ""Button"",
-                    ""id"": ""755af068-903d-4e54-8e31-9e2fb7778f71"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""RB_Hold"",
                     ""type"": ""PassThrough"",
                     ""id"": ""519467a0-9641-47c9-a7bb-dcaa661f42d7"",
@@ -359,7 +381,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""1305bc8f-cf46-446f-ac94-44ed30dfeb4b"",
-                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -446,28 +468,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""b2c6e42a-6f98-4db4-b705-d1dd5e071b30"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LT"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""54946e6a-32ff-4f28-8b3f-41f4de055330"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LT"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""d92ee0a0-0af5-480c-8ac6-9afa68e6ea3f"",
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
@@ -519,6 +519,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_PlayerMovement = asset.FindActionMap("Player Movement", throwIfNotFound: true);
         m_PlayerMovement_Camera = m_PlayerMovement.FindAction("Camera", throwIfNotFound: true);
         m_PlayerMovement_Movement = m_PlayerMovement.FindAction("Movement", throwIfNotFound: true);
+        m_PlayerMovement_ChangeMovement = m_PlayerMovement.FindAction("ChangeMovement", throwIfNotFound: true);
         m_PlayerMovement_ToggleCrouching = m_PlayerMovement.FindAction("ToggleCrouching", throwIfNotFound: true);
         m_PlayerMovement_Dodge = m_PlayerMovement.FindAction("Dodge", throwIfNotFound: true);
         // Player Actions
@@ -527,7 +528,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_PlayerActions_Jump = m_PlayerActions.FindAction("Jump", throwIfNotFound: true);
         m_PlayerActions_PrimaryAttack = m_PlayerActions.FindAction("PrimaryAttack", throwIfNotFound: true);
         m_PlayerActions_SecondaryAttack = m_PlayerActions.FindAction("SecondaryAttack", throwIfNotFound: true);
-        m_PlayerActions_LT = m_PlayerActions.FindAction("LT", throwIfNotFound: true);
         m_PlayerActions_RB_Hold = m_PlayerActions.FindAction("RB_Hold", throwIfNotFound: true);
         m_PlayerActions_LB_Hold = m_PlayerActions.FindAction("LB_Hold", throwIfNotFound: true);
     }
@@ -591,6 +591,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private IPlayerMovementActions m_PlayerMovementActionsCallbackInterface;
     private readonly InputAction m_PlayerMovement_Camera;
     private readonly InputAction m_PlayerMovement_Movement;
+    private readonly InputAction m_PlayerMovement_ChangeMovement;
     private readonly InputAction m_PlayerMovement_ToggleCrouching;
     private readonly InputAction m_PlayerMovement_Dodge;
     public struct PlayerMovementActions
@@ -599,6 +600,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public PlayerMovementActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Camera => m_Wrapper.m_PlayerMovement_Camera;
         public InputAction @Movement => m_Wrapper.m_PlayerMovement_Movement;
+        public InputAction @ChangeMovement => m_Wrapper.m_PlayerMovement_ChangeMovement;
         public InputAction @ToggleCrouching => m_Wrapper.m_PlayerMovement_ToggleCrouching;
         public InputAction @Dodge => m_Wrapper.m_PlayerMovement_Dodge;
         public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
@@ -616,6 +618,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Movement.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnMovement;
                 @Movement.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnMovement;
                 @Movement.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnMovement;
+                @ChangeMovement.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnChangeMovement;
+                @ChangeMovement.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnChangeMovement;
+                @ChangeMovement.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnChangeMovement;
                 @ToggleCrouching.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnToggleCrouching;
                 @ToggleCrouching.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnToggleCrouching;
                 @ToggleCrouching.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnToggleCrouching;
@@ -632,6 +637,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Movement.started += instance.OnMovement;
                 @Movement.performed += instance.OnMovement;
                 @Movement.canceled += instance.OnMovement;
+                @ChangeMovement.started += instance.OnChangeMovement;
+                @ChangeMovement.performed += instance.OnChangeMovement;
+                @ChangeMovement.canceled += instance.OnChangeMovement;
                 @ToggleCrouching.started += instance.OnToggleCrouching;
                 @ToggleCrouching.performed += instance.OnToggleCrouching;
                 @ToggleCrouching.canceled += instance.OnToggleCrouching;
@@ -650,7 +658,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerActions_Jump;
     private readonly InputAction m_PlayerActions_PrimaryAttack;
     private readonly InputAction m_PlayerActions_SecondaryAttack;
-    private readonly InputAction m_PlayerActions_LT;
     private readonly InputAction m_PlayerActions_RB_Hold;
     private readonly InputAction m_PlayerActions_LB_Hold;
     public struct PlayerActionsActions
@@ -661,7 +668,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_PlayerActions_Jump;
         public InputAction @PrimaryAttack => m_Wrapper.m_PlayerActions_PrimaryAttack;
         public InputAction @SecondaryAttack => m_Wrapper.m_PlayerActions_SecondaryAttack;
-        public InputAction @LT => m_Wrapper.m_PlayerActions_LT;
         public InputAction @RB_Hold => m_Wrapper.m_PlayerActions_RB_Hold;
         public InputAction @LB_Hold => m_Wrapper.m_PlayerActions_LB_Hold;
         public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
@@ -685,9 +691,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @SecondaryAttack.started -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnSecondaryAttack;
                 @SecondaryAttack.performed -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnSecondaryAttack;
                 @SecondaryAttack.canceled -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnSecondaryAttack;
-                @LT.started -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnLT;
-                @LT.performed -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnLT;
-                @LT.canceled -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnLT;
                 @RB_Hold.started -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRB_Hold;
                 @RB_Hold.performed -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRB_Hold;
                 @RB_Hold.canceled -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRB_Hold;
@@ -710,9 +713,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @SecondaryAttack.started += instance.OnSecondaryAttack;
                 @SecondaryAttack.performed += instance.OnSecondaryAttack;
                 @SecondaryAttack.canceled += instance.OnSecondaryAttack;
-                @LT.started += instance.OnLT;
-                @LT.performed += instance.OnLT;
-                @LT.canceled += instance.OnLT;
                 @RB_Hold.started += instance.OnRB_Hold;
                 @RB_Hold.performed += instance.OnRB_Hold;
                 @RB_Hold.canceled += instance.OnRB_Hold;
@@ -727,6 +727,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     {
         void OnCamera(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
+        void OnChangeMovement(InputAction.CallbackContext context);
         void OnToggleCrouching(InputAction.CallbackContext context);
         void OnDodge(InputAction.CallbackContext context);
     }
@@ -736,7 +737,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnPrimaryAttack(InputAction.CallbackContext context);
         void OnSecondaryAttack(InputAction.CallbackContext context);
-        void OnLT(InputAction.CallbackContext context);
         void OnRB_Hold(InputAction.CallbackContext context);
         void OnLB_Hold(InputAction.CallbackContext context);
     }

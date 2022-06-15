@@ -1,4 +1,3 @@
-using DefaultNamespace;
 using UnityEngine;
 
 [RequireComponent(typeof(LocomotionManager), typeof(CombatManager))]
@@ -17,11 +16,14 @@ public class InputManager : MonoBehaviour
     public float horizontalInput;
     public float verticalInput;
 
+    public float moveAmount;
+
     public bool crouchInput;
     public bool dodgeInput;
     public bool sprintInput;
     public bool jumpInput;
 
+    public bool isFreeMovement;
     public bool primaryAttackInput;
 
     public bool right_trigger_input;
@@ -30,14 +32,14 @@ public class InputManager : MonoBehaviour
     public bool right_button_hold_input; // todo think of sth better
     public bool left_button_hold_input; // todo think of sth better
 
+    private CameraManager _cameraManager;
+
     private void Awake()
     {
         _locomotionManager = GetComponent<LocomotionManager>();
         _combatManager = GetComponent<CombatManager>();
-
-        // playerCombatManager = GetComponent<PlayerCombatManager>();
-        // switchVirtual = FindObjectOfType<SwitchVirtualCamera>();
-        // should be just one 
+        // ToDo: Seriealized Field (?) 
+        _cameraManager = FindObjectOfType<CameraManager>();
     }
 
     private void OnEnable()
@@ -78,8 +80,8 @@ public class InputManager : MonoBehaviour
             _playerInput.PlayerMovement.ToggleCrouching.performed += i => crouchInput = true;
             _playerInput.PlayerMovement.ToggleCrouching.canceled += i => crouchInput = false;
 
-            _playerInput.PlayerActions.LT.performed += _ => HandleAimingInput(true);
-            _playerInput.PlayerActions.LT.canceled += _ => HandleAimingInput(false);
+            _playerInput.PlayerMovement.ChangeMovement.performed += _ => HandleAimingInput(true);
+            _playerInput.PlayerMovement.ChangeMovement.canceled += _ => HandleAimingInput(false);
         }
 
         _playerInput.Enable();
@@ -103,8 +105,6 @@ public class InputManager : MonoBehaviour
         HandleAttackInput();
         HandleDefenseInput();
         HandleCrouchInput();
-
-        //    HandleActionInput(); 
     }
 
     private void HandleMovementInput()
@@ -114,6 +114,19 @@ public class InputManager : MonoBehaviour
 
         cameraInputX = cameraInput.x; // take input from joystick and then pass it to move the camera 
         cameraInputY = cameraInput.y;
+
+        if (isFreeMovement)
+        {
+            moveAmount =
+                Mathf.Clamp01(Mathf.Abs(horizontalInput) +
+                              Mathf.Abs(verticalInput)); // clamp value between 0 and 1 // Abs - Absolute Value
+            GetComponent<AnimatorManager>().UpdateAnimatorMovementValues(0, moveAmount, _locomotionManager.isSprinting);
+        }
+        else
+        {
+            GetComponent<AnimatorManager>()
+                .UpdateAnimatorMovementValues(horizontalInput, verticalInput, _locomotionManager.isSprinting);
+        }
     }
 
     private void HandleSprintingInput()
@@ -138,7 +151,7 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private void HandleAttackInput() // maybe wrap in action input#
+    private void HandleAttackInput()
     {
         if (primaryAttackInput)
         {
@@ -148,10 +161,10 @@ public class InputManager : MonoBehaviour
 
     private void HandleDefenseInput()
     {
-        // if (left_button_hold_input)
-        // {
-        //     playerCombatManager.HandleDefense();
-        // }
+        if (left_button_hold_input)
+        {
+            _combatManager.HandleDefense();
+        }
     }
 
     private void HandleCrouchInput()
@@ -161,13 +174,14 @@ public class InputManager : MonoBehaviour
 
     private void HandleAimingInput(bool isAiming)
     {
-        // if (isAiming)
-        // {
-        //     switchVirtual.StartAiming();
-        // }
-        // else
-        // {
-        //     switchVirtual.CancelAiming();
-        // }
+        isFreeMovement = isAiming;
+        if (isAiming)
+        {
+            _cameraManager.StartAiming();
+        }
+        else
+        {
+            _cameraManager.CancelAiming();
+        }
     }
 }

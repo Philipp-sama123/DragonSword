@@ -24,6 +24,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "ChangeMovement",
+                    "type": "Button",
+                    "id": "649ab46d-0442-4f2c-8e0e-972389ed9fe2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "ToggleCrouching",
                     "type": "Button",
                     "id": "66ce8fcb-4351-4e2f-9c62-ae87bb7ac5dc",
@@ -262,6 +271,28 @@
                     "action": "Dodge",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2b60a36c-7496-4bc9-871c-bbac7a269a8e",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangeMovement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0b3ee37b-7d51-4728-9744-52dcc2cb32d0",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangeMovement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -306,15 +337,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "LT",
-                    "type": "Button",
-                    "id": "755af068-903d-4e54-8e31-9e2fb7778f71",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "RB_Hold",
                     "type": "PassThrough",
                     "id": "519467a0-9641-47c9-a7bb-dcaa661f42d7",
@@ -337,7 +359,7 @@
                 {
                     "name": "",
                     "id": "1305bc8f-cf46-446f-ac94-44ed30dfeb4b",
-                    "path": "<Gamepad>/leftStickPress",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -419,28 +441,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "SecondaryAttack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b2c6e42a-6f98-4db4-b705-d1dd5e071b30",
-                    "path": "<Gamepad>/leftTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "LT",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "54946e6a-32ff-4f28-8b3f-41f4de055330",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "LT",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

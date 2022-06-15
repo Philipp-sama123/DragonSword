@@ -10,7 +10,7 @@ public class LocomotionManager : MonoBehaviour
     private PlayerManager _playerManager;
     private AnimatorManager _animatorManager;
     private InputManager _inputManager;
-    private Transform _cameraObject;
+    private Transform _cameraTransform;
 
     Vector3 _moveDirection = Vector3.zero;
 
@@ -32,6 +32,7 @@ public class LocomotionManager : MonoBehaviour
     public float runningSpeed = 5f;
     public float sprintingSpeed = 7f;
     public float crouchingSpeedReducer = 5f;
+    public float rotationSpeed = 15f;
 
     [Header("Jump Speeds")] public float jumpHeight = 3;
     public float gravityIntensity = -15;
@@ -48,42 +49,93 @@ public class LocomotionManager : MonoBehaviour
         _animatorManager = GetComponent<AnimatorManager>();
         _inputManager = GetComponent<InputManager>();
         playerRigidbody = GetComponent<Rigidbody>();
-        _cameraObject = Camera.main.transform;
+        if (Camera.main != null) _cameraTransform = Camera.main.transform;
     }
 
     public void HandleAllMovements()
     {
         HandleFallingAndLanding();
-        if (_playerManager.isInteracting)
+        if (_playerManager.isInteracting || isJumping)
         {
             return;
         }
 
-        HandleMovement();
+        if (_inputManager.isFreeMovement)
+        {
+            HandleFreeMovement();
+            HandleFreeMovementRotation();
+        }
+        else
+        {
+            HandleMovement();
+        }
+    }
+
+    private void HandleFreeMovement()
+    {
+        _isCrouching = _animatorManager.animator.GetBool(IsCrouching);
+
+        _moveDirection = _cameraTransform.forward * _inputManager.verticalInput;
+        _moveDirection = _moveDirection + _cameraTransform.right * _inputManager.horizontalInput;
+        _moveDirection.Normalize();
+        _moveDirection.y = 0; // prevent going up
+
+        if (isSprinting)
+        {
+            _moveDirection *= sprintingSpeed;
+        }
+        else
+        {
+            if (_inputManager.moveAmount >= 0.5f)
+            {
+                _moveDirection *= runningSpeed;
+            }
+            else
+            {
+                _moveDirection *= walkingSpeed;
+            }
+        }
+
+        if (_isCrouching)
+        {
+            _moveDirection /= crouchingSpeedReducer;
+        }
+
+        Vector3 movementVelocity = _moveDirection;
+        playerRigidbody.velocity = movementVelocity;
     }
 
     private void HandleMovement()
     {
-        if (isJumping)
-        {
-            return;
-        }
-
         _isCrouching = _animatorManager.animator.GetBool(IsCrouching);
 
-        _moveDirection = _cameraObject.forward * _inputManager.verticalInput;
-        _moveDirection += _cameraObject.right * _inputManager.horizontalInput;
+        var playerTransform = transform;
+        _moveDirection = playerTransform.forward * _inputManager.verticalInput;
+        _moveDirection += playerTransform.right * _inputManager.horizontalInput;
 
         _moveDirection.Normalize();
         _moveDirection.y = 0; // prevent going up
 
+        if (isSprinting)
+        {
+            _moveDirection *= sprintingSpeed;
+        }
+        else
+        {
+            if (_moveDirection.z >= 0.5f)
+            {
+                _moveDirection *= runningSpeed;
+            }
+            else
+            {
+                _moveDirection *= walkingSpeed;
+            }
+        }
 
-        _animatorManager.UpdateAnimatorMovementValues(
-            _moveDirection.x,
-            _moveDirection.z,
-            isSprinting);
-
-        AdjustMovementSpeed();
+        if (_isCrouching)
+        {
+            _moveDirection /= crouchingSpeedReducer;
+        }
 
         playerRigidbody.velocity = _moveDirection;
     }
@@ -176,28 +228,34 @@ public class LocomotionManager : MonoBehaviour
         _animatorManager.animator.SetBool(IsCrouching, isCrouching);
     }
 
-
-    private void AdjustMovementSpeed()
+    private void HandleFreeMovementRotation()
     {
-        if (isSprinting)
+        // Always face the direction you are running to
+        Vector3 targetDirection;
+        var cameraObjectTransform = _cameraTransform.transform;
+        targetDirection = cameraObjectTransform.forward * _inputManager.verticalInput;
+        targetDirection += cameraObjectTransform.right * _inputManager.horizontalInput;
+        targetDirection.Normalize();
+        targetDirection.y = 0;
+
+        if (targetDirection == Vector3.zero)
         {
-            _moveDirection *= sprintingSpeed;
-        }
-        else
-        {
-            if (_inputManager.verticalInput >= 0.5f)
-            {
-                _moveDirection *= runningSpeed;
-            }
-            else
-            {
-                _moveDirection *= walkingSpeed;
-            }
+            targetDirection = transform.forward;
         }
 
-        if (_isCrouching)
-        {
-            _moveDirection /= crouchingSpeedReducer;
-        }
+        //look towards target Rotation
+        Quaternion
+            targetRotation =
+                Quaternion.LookRotation(targetDirection); // Quaternions are used to calculate rotations in Unity 
+        Quaternion
+            playerRotation =
+                Quaternion.Slerp(transform.rotation, targetRotation,
+                    rotationSpeed *
+                    Time.deltaTime); // Should you use when you want behavior independent of the Frame Rate(!)  -- framerate will always differ!
+
+        // ToDo: Handle rotation in Animator
+        //    animatorManager.UpdateAnimatorRotationValues(targetRotation.z);
+
+        transform.rotation = playerRotation;
     }
 }

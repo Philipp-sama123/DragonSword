@@ -393,7 +393,7 @@ MonoBehaviour:
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
     m_Style: 1
-    m_Time: 2
+    m_Time: 0.5
     m_CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -476,6 +476,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d71188ec11ee08d48855bf0b7ae87c6c, type: 3}
+--- !u!4 &1179740823 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2019860943888361067, guid: 23a4c11a8e08e5c49b94bd23443b7d3f, type: 3}
+  m_PrefabInstance: {fileID: 8474757951101624122}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1342266686
 GameObject:
   m_ObjectHideFlags: 0
@@ -487,13 +492,14 @@ GameObject:
   - component: {fileID: 1342266688}
   - component: {fileID: 1342266687}
   - component: {fileID: 1342266689}
+  - component: {fileID: 1342266690}
   m_Layer: 0
-  m_Name: Aim Camera
+  m_Name: Free Look Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1342266687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -510,9 +516,9 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 11
+  m_Priority: 1
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 4149679556284541}
+  m_LookAt: {fileID: 1179740823}
   m_Follow: {fileID: 4149679556284541}
   m_Lens:
     FieldOfView: 50
@@ -564,6 +570,18 @@ MonoBehaviour:
   AutoEnableInputs: 1
   XYAxis: {fileID: -5630151704836100654, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   ZAxis: {fileID: 0}
+--- !u!114 &1342266690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342266686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d63216cb274424940fdd6f55c1db51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1482444601
 GameObject:
   m_ObjectHideFlags: 3
@@ -807,7 +825,7 @@ MonoBehaviour:
   m_VerticalAxis:
     Value: 0
     m_SpeedMode: 0
-    m_MaxSpeed: 300
+    m_MaxSpeed: 100
     m_AccelTime: 0.1
     m_DecelTime: 0.1
     m_InputAxisName: Mouse Y
@@ -831,7 +849,7 @@ MonoBehaviour:
   m_HorizontalAxis:
     Value: 0
     m_SpeedMode: 0
-    m_MaxSpeed: 300
+    m_MaxSpeed: 100
     m_AccelTime: 0.1
     m_DecelTime: 0.1
     m_InputAxisName: Mouse X
@@ -959,6 +977,46 @@ PrefabInstance:
     - target: {fileID: 8474757950996332151, guid: 23a4c11a8e08e5c49b94bd23443b7d3f, type: 3}
       propertyPath: m_Height
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8474757952935367465, guid: 23a4c11a8e08e5c49b94bd23443b7d3f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.135
+      objectReference: {fileID: 0}
+    - target: {fileID: 8474757952935367465, guid: 23a4c11a8e08e5c49b94bd23443b7d3f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.0145
+      objectReference: {fileID: 0}
+    - target: {fileID: 8474757952935367465, guid: 23a4c11a8e08e5c49b94bd23443b7d3f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8474757952935367465, guid: 23a4c11a8e08e5c49b94bd23443b7d3f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7329069
+      objectReference: {fileID: 0}
+    - target: {fileID: 8474757952935367465, guid: 23a4c11a8e08e5c49b94bd23443b7d3f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.619199
+      objectReference: {fileID: 0}
+    - target: {fileID: 8474757952935367465, guid: 23a4c11a8e08e5c49b94bd23443b7d3f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.22777666
+      objectReference: {fileID: 0}
+    - target: {fileID: 8474757952935367465, guid: 23a4c11a8e08e5c49b94bd23443b7d3f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.16600618
+      objectReference: {fileID: 0}
+    - target: {fileID: 8474757952935367465, guid: 23a4c11a8e08e5c49b94bd23443b7d3f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 79.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8474757952935367465, guid: 23a4c11a8e08e5c49b94bd23443b7d3f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 44.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 8474757952935367465, guid: 23a4c11a8e08e5c49b94bd23443b7d3f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 12.275
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23a4c11a8e08e5c49b94bd23443b7d3f, type: 3}

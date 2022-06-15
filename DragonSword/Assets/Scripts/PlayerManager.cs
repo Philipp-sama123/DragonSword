@@ -1,16 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 
 public class PlayerManager : MonoBehaviour
 {
     // ToDo: Think of Required Fields
-    Animator _animator;
-    InputManager _inputManager;
-
-    LocomotionManager _locomotionManager;
-    // PlayerAim playerAim;
+    private Animator _animator;
+    private InputManager _inputManager;
+    private LocomotionManager _locomotionManager;
 
     public bool isInteracting;
     public bool isUsingRootMotion;
@@ -23,7 +18,6 @@ public class PlayerManager : MonoBehaviour
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        // playerAim = GetComponent<PlayerAim>();
         _inputManager = GetComponent<InputManager>();
         _locomotionManager = GetComponent<LocomotionManager>();
     }
@@ -38,10 +32,9 @@ public class PlayerManager : MonoBehaviour
     private void FixedUpdate()
     {
         _locomotionManager.HandleAllMovements();
-        // _locomotionManager.HandleRotation(); ;
     }
 
-    //afer Frame ended
+    // called after Frame ended
     private void LateUpdate()
     {
         // camera.HandleAllCameraMovement();
