@@ -120,6 +120,7 @@ public class InputManager : MonoBehaviour
             moveAmount =
                 Mathf.Clamp01(Mathf.Abs(horizontalInput) +
                               Mathf.Abs(verticalInput)); // clamp value between 0 and 1 // Abs - Absolute Value
+            // ToDo: extract somewhere where it makes more sense 
             GetComponent<AnimatorManager>().UpdateAnimatorMovementValues(0, moveAmount, _locomotionManager.isSprinting);
         }
         else
