@@ -34,6 +34,10 @@ public class LocomotionManager : MonoBehaviour
     public float crouchingSpeedReducer = 5f;
     public float rotationSpeed = 15f;
 
+    public float turnTime = .1f;
+    public float turnVelocity;
+
+
     [Header("Jump Speeds")] public float jumpHeight = 3;
     public float gravityIntensity = -15;
 
@@ -60,15 +64,10 @@ public class LocomotionManager : MonoBehaviour
             return;
         }
 
-        if (_inputManager.isFreeMovement)
-        {
-            HandleFreeMovement();
-            HandleFreeMovementRotation();
-        }
-        else
-        {
-            HandleMovement();
-        }
+        Debug.Log(_inputManager.isAiming);
+
+        HandleFreeMovement();
+        HandleFreeMovementRotation();
     }
 
     private void HandleFreeMovement()
@@ -221,41 +220,13 @@ public class LocomotionManager : MonoBehaviour
         _animatorManager.PlayTargetAnimation("Dodge Forward", true, true);
         // toggle invulnerable bool here
     }
-
-    public void HandleCrouchInput(bool isCrouching)
-    {
-        // todo fix
-        _animatorManager.animator.SetBool(IsCrouching, isCrouching);
-    }
-
+    
     private void HandleFreeMovementRotation()
     {
-        // Always face the direction you are running to
-        Vector3 targetDirection;
-        var cameraObjectTransform = _cameraTransform.transform;
-        targetDirection = cameraObjectTransform.forward * _inputManager.verticalInput;
-        targetDirection += cameraObjectTransform.right * _inputManager.horizontalInput;
-        targetDirection.Normalize();
-        targetDirection.y = 0;
+        Vector3 direction = new Vector3(_inputManager.horizontalInput, 0f, _inputManager.verticalInput).normalized;
+        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + _cameraTransform.eulerAngles.y;
+        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnVelocity, turnTime);
 
-        if (targetDirection == Vector3.zero)
-        {
-            targetDirection = transform.forward;
-        }
-
-        //look towards target Rotation
-        Quaternion
-            targetRotation =
-                Quaternion.LookRotation(targetDirection); // Quaternions are used to calculate rotations in Unity 
-        Quaternion
-            playerRotation =
-                Quaternion.Slerp(transform.rotation, targetRotation,
-                    rotationSpeed *
-                    Time.deltaTime); // Should you use when you want behavior independent of the Frame Rate(!)  -- framerate will always differ!
-
-        // ToDo: Handle rotation in Animator
-        //    animatorManager.UpdateAnimatorRotationValues(targetRotation.z);
-
-        transform.rotation = playerRotation;
+        transform.rotation = Quaternion.Euler(0f, angle, 0f);
     }
 }

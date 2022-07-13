@@ -23,14 +23,15 @@ public class InputManager : MonoBehaviour
     public bool sprintInput;
     public bool jumpInput;
 
-    public bool isFreeMovement;
+    public bool isAiming;
     public bool primaryAttackInput;
-
+    public bool blockingInput;
+    
     public bool right_trigger_input;
     public bool left_trigger_input;
 
     public bool right_button_hold_input; // todo think of sth better
-    public bool left_button_hold_input; // todo think of sth better
+
 
     private CameraManager _cameraManager;
 
@@ -74,14 +75,11 @@ public class InputManager : MonoBehaviour
             _playerInput.PlayerActions.RB_Hold.performed += i => right_button_hold_input = true;
             _playerInput.PlayerActions.RB_Hold.canceled += i => right_button_hold_input = false;
 
-            _playerInput.PlayerActions.LB_Hold.performed += i => left_button_hold_input = true;
-            _playerInput.PlayerActions.LB_Hold.canceled += i => left_button_hold_input = false;
+            _playerInput.PlayerActions.Block.performed += i => blockingInput = true;
+            _playerInput.PlayerActions.Block.canceled += i => blockingInput = false;
 
-            _playerInput.PlayerMovement.ToggleCrouching.performed += i => crouchInput = true;
-            _playerInput.PlayerMovement.ToggleCrouching.canceled += i => crouchInput = false;
-
-            _playerInput.PlayerMovement.ChangeMovement.performed += _ => HandleAimingInput(true);
-            _playerInput.PlayerMovement.ChangeMovement.canceled += _ => HandleAimingInput(false);
+            _playerInput.PlayerMovement.ChangeMovement.performed += i => isAiming = true;
+            _playerInput.PlayerMovement.ChangeMovement.canceled += i => isAiming = false;
         }
 
         _playerInput.Enable();
@@ -101,10 +99,9 @@ public class InputManager : MonoBehaviour
         HandleSprintingInput();
         HandleJumpingInput();
         HandleDodgeInput();
-
+        HandleAimingInput();
         HandleAttackInput();
         HandleDefenseInput();
-        HandleCrouchInput();
     }
 
     private void HandleMovementInput()
@@ -115,19 +112,12 @@ public class InputManager : MonoBehaviour
         cameraInputX = cameraInput.x; // take input from joystick and then pass it to move the camera 
         cameraInputY = cameraInput.y;
 
-        if (isFreeMovement)
-        {
-            moveAmount =
-                Mathf.Clamp01(Mathf.Abs(horizontalInput) +
-                              Mathf.Abs(verticalInput)); // clamp value between 0 and 1 // Abs - Absolute Value
-            // ToDo: extract somewhere where it makes more sense 
-            GetComponent<AnimatorManager>().UpdateAnimatorMovementValues(0, moveAmount, _locomotionManager.isSprinting);
-        }
-        else
-        {
-            GetComponent<AnimatorManager>()
-                .UpdateAnimatorMovementValues(horizontalInput, verticalInput, _locomotionManager.isSprinting);
-        }
+        moveAmount =
+            Mathf.Clamp01(Mathf.Abs(horizontalInput) +
+                          Mathf.Abs(verticalInput)); // clamp value between 0 and 1 // Abs - Absolute Value
+        // ToDo: extract somewhere where it makes more sense 
+        GetComponent<AnimatorManager>().UpdateAnimatorMovementValues(0, moveAmount, _locomotionManager.isSprinting);
+
     }
 
     private void HandleSprintingInput()
@@ -162,20 +152,15 @@ public class InputManager : MonoBehaviour
 
     private void HandleDefenseInput()
     {
-        if (left_button_hold_input)
+        if (blockingInput)
         {
             _combatManager.HandleDefense();
         }
     }
+    
 
-    private void HandleCrouchInput()
+    private void HandleAimingInput()
     {
-        _locomotionManager.HandleCrouchInput(crouchInput);
-    }
-
-    private void HandleAimingInput(bool isAiming)
-    {
-        isFreeMovement = isAiming;
         if (isAiming)
         {
             _cameraManager.StartAiming();

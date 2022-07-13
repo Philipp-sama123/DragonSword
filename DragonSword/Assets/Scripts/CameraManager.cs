@@ -4,26 +4,24 @@ using UnityEngine;
 public class CameraManager : MonoBehaviour
 {
     private CinemachineVirtualCamera _virtualCamera;
-    private int priorityBoostAmount = 10;
 
+    [SerializeField] private CinemachineVirtualCamera aimCamera; 
+    [SerializeField] private CinemachineVirtualCamera freeLookCamera; 
     // [SerializeField] private Canvas thirdPersonCanvas; 
     // [SerializeField] private Canvas aimCanvas;
 
-    private void Awake()
-    {
-        _virtualCamera = GetComponent<CinemachineVirtualCamera>();
-        // aimCanvas.enabled = false;
-        // thirdPersonCanvas.enabled = true;
-    }
+
     public void StartAiming()
     {
-        _virtualCamera.Priority += priorityBoostAmount;
+        aimCamera.enabled = true;
+        freeLookCamera.enabled = false;
         // aimCanvas.enabled = true;
         // thirdPersonCanvas.enabled = false; 
     }
     public void CancelAiming()
     {
-        _virtualCamera.Priority -= priorityBoostAmount;
+        aimCamera.enabled = false;
+        freeLookCamera.enabled = true;
         // aimCanvas.enabled = false;
         // thirdPersonCanvas.enabled = true;
     }
