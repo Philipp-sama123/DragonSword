@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField] private float initHealth = 100f;
     // ToDo: Think of Required Fields
     private Animator _animator;
     private InputManager _inputManager;
@@ -9,6 +11,7 @@ public class PlayerManager : MonoBehaviour
 
     public bool isInteracting;
     public bool isUsingRootMotion;
+    private float _currentHealth;
 
     private static readonly int IsJumping = Animator.StringToHash("IsJumping");
     private static readonly int IsGrounded = Animator.StringToHash("IsGrounded");
@@ -20,6 +23,11 @@ public class PlayerManager : MonoBehaviour
         _animator = GetComponent<Animator>();
         _inputManager = GetComponent<InputManager>();
         _locomotionManager = GetComponent<LocomotionManager>();
+    }
+
+    private void Start()
+    {
+        _currentHealth = initHealth;
     }
 
     private void Update()
@@ -43,5 +51,21 @@ public class PlayerManager : MonoBehaviour
         _locomotionManager.isJumping = _animator.GetBool(IsJumping);
         isInteracting = _animator.GetBool(IsInteracting);
         isUsingRootMotion = _animator.GetBool(IsUsingRootMotion);
+    }
+
+    //Todo: Extract to base class --> Damageable
+    public void OnPlayerDamage(float takeDamage)
+    {
+        _currentHealth -= takeDamage;
+        if (_currentHealth <= 0)
+        {
+            PlayerDeath();
+        }
+    }
+
+    private void PlayerDeath()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Destroy(gameObject, 1.0f);
     }
 }

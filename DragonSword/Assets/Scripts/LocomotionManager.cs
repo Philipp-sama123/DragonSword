@@ -64,8 +64,6 @@ public class LocomotionManager : MonoBehaviour
             return;
         }
 
-        Debug.Log(_inputManager.isAiming);
-
         HandleFreeMovement();
         HandleFreeMovementRotation();
     }
